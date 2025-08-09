@@ -1,0 +1,628 @@
+# 🔧 Backend ERP Móviles
+
+API REST modular para la gestión de reparaciones, ventas y compras de dispositivos móviles.
+
+## 📋 Tabla de Contenidos
+
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Arquitectura](#arquitectura)
+- [Flujo de Datos](#flujo-de-datos)
+- [API Endpoints](#api-endpoints)
+- [Base de Datos](#base-de-datos)
+- [Ejemplos de Uso](#ejemplos-de-uso)
+- [Desarrollo](#desarrollo)
+- [Contribución](#contribución)
+
+## ✨ Características
+
+- **Arquitectura modular** con separación clara de responsabilidades
+- **API REST** completa con operaciones CRUD
+- **Manejo robusto de errores** centralizado
+- **Validación de datos** en múltiples capas
+- **Transacciones de base de datos** para operaciones complejas
+- **Logging detallado** para debugging y monitoreo
+- **CORS configurado** para desarrollo y producción
+- **Middleware de seguridad** con Helmet
+- **Estructura escalable** para futuras funcionalidades
+
+## 🛠️ Tecnologías
+
+- **Node.js** v18+ - Runtime de JavaScript
+- **Express.js** v4.18 - Framework web minimalista
+- **MySQL** v8.0 - Base de datos relacional
+- **mysql2** - Driver de MySQL para Node.js
+- **dotenv** - Gestión de variables de entorno
+- **cors** - Middleware para Cross-Origin Resource Sharing
+- **helmet** - Middleware de seguridad
+- **morgan** - Logger HTTP
+
+## 📁 Estructura del Proyecto
+
+```
+backend/
+├── 📄 server.js                    # Punto de entrada principal
+├── 📄 package.json                 # Dependencias y scripts
+├── 📄 README.md                    # Documentación
+├── 📄 .env                         # Variables de entorno
+├── 📄 .gitignore                   # Archivos ignorados por Git
+├── 📂 config/
+│   ├── 📄 database.js              # Configuración de base de datos
+│   └── 📄 cors.js                  # Configuración CORS
+├── 📂 middleware/
+│   ├── 📄 auth.js                  # Autenticación (futuro)
+│   ├── 📄 validation.js            # Validación de datos
+│   └── 📄 errorHandler.js          # Manejo centralizado de errores
+├── 📂 routes/
+│   ├── 📄 index.js                 # Rutas principales
+│   ├── 📄 test.js                  # Rutas de prueba y salud
+│   ├── 📄 reparaciones.js          # Rutas de reparaciones
+│   ├── 📄 ventas.js                # Rutas de ventas
+│   ├── 📄 compras.js               # Rutas de compras
+│   └── 📄 clientes.js              # Rutas de clientes
+├── 📂 controllers/
+│   ├── 📄 reparacionController.js  # Controlador de reparaciones
+│   ├── 📄 ventaController.js       # Controlador de ventas
+│   ├── 📄 compraController.js      # Controlador de compras
+│   └── 📄 clienteController.js     # Controlador de clientes
+├── 📂 services/
+│   ├── 📄 reparacionService.js     # Lógica de negocio - reparaciones
+│   ├── 📄 ventaService.js          # Lógica de negocio - ventas
+│   ├── 📄 compraService.js         # Lógica de negocio - compras
+│   └── 📄 notificationService.js   # Servicio de notificaciones
+├── 📂 models/
+│   ├── 📄 index.js                 # Exportación de modelos
+│   ├── 📂 Reparacion/
+│   │   ├── 📄 ReparacionModel.js   # Modelo de reparación
+│   │   ├── 📄 DispositivoModel.js  # Modelo de dispositivo
+│   │   └── 📄 AveriaModel.js       # Modelo de avería
+│   ├── 📂 Venta/
+│   │   └── 📄 VentaModel.js        # Modelo de venta
+│   └── 📂 Cliente/
+│       └── 📄 ClienteModel.js      # Modelo de cliente
+└── 📂 utils/
+    ├── 📄 validators.js            # Validadores personalizados
+    ├── 📄 helpers.js               # Funciones de ayuda
+    └── 📄 constants.js             # Constantes del sistema
+```
+
+## 🚀 Instalación
+
+### Prerequisitos
+
+- Node.js v18.0.0 o superior
+- MySQL v8.0 o superior
+- NPM v9.0.0 o superior
+
+### Pasos de instalación
+
+1. **Clonar el repositorio**
+```bash
+git clone https://github.com/tu-usuario/erp-moviles.git
+cd erp-moviles/backend
+```
+
+2. **Instalar dependencias**
+```bash
+npm install
+```
+
+3. **Configurar variables de entorno**
+```bash
+cp .env.example .env
+```
+
+4. **Configurar la base de datos**
+```bash
+# Crear la base de datos en MySQL
+mysql -u root -p
+CREATE DATABASE erp_moviles;
+```
+
+5. **Ejecutar migraciones** (si existen)
+```bash
+npm run migrate
+```
+
+6. **Iniciar el servidor**
+```bash
+# Desarrollo
+npm run dev
+
+# Producción
+npm start
+```
+
+## ⚙️ Configuración
+
+### Variables de Entorno
+
+```env
+# Servidor
+PORT=5000
+NODE_ENV=development
+
+# Base de datos
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=tu_password
+DB_NAME=erp_moviles
+
+# Frontend
+FRONTEND_URL=http://localhost:5173
+
+# JWT (futuro)
+JWT_SECRET=tu_jwt_secret
+JWT_EXPIRES_IN=24h
+
+# Email (futuro)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=tu_email@gmail.com
+EMAIL_PASSWORD=tu_password
+```
+
+### Scripts disponibles
+
+```bash
+# Desarrollo con auto-reload
+npm run dev
+
+# Producción
+npm start
+
+# Ejecutar tests
+npm test
+
+# Linter
+npm run lint
+
+# Formatear código
+npm run format
+```
+
+## 🏗️ Arquitectura
+
+### Patrón MVC Modular
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│     Routes      │────│   Controllers   │────│    Services     │
+│  (HTTP Layer)   │    │  (Logic Layer)  │    │ (Business Logic)│
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                                      │
+                                               ┌─────────────────┐
+                                               │     Models      │
+                                               │  (Data Layer)   │
+                                               └─────────────────┘
+                                                      │
+                                               ┌─────────────────┐
+                                               │    Database     │
+                                               │     (MySQL)     │
+                                               └─────────────────┘
+```
+
+### Capas de la Aplicación
+
+1. **Rutas (Routes)**: Definen endpoints HTTP y validan parámetros
+2. **Controladores (Controllers)**: Manejan requests/responses y coordinan operaciones
+3. **Servicios (Services)**: Contienen lógica de negocio y transacciones
+4. **Modelos (Models)**: Abstracción de datos y operaciones de BD
+5. **Middleware**: Funciones que procesan requests (auth, validation, error handling)
+
+## 🔄 Flujo de Datos
+
+### Flujo de una Petición HTTP
+
+```mermaid
+graph TD
+    A[Cliente HTTP] --> B[Express Server]
+    B --> C[Middleware Global]
+    C --> D[Route Handler]
+    D --> E[Controller]
+    E --> F[Service]
+    F --> G[Model]
+    G --> H[Database]
+    H --> I[Response]
+    I --> J[Error Handler]
+    J --> K[Cliente HTTP]
+```
+
+### Ejemplo: Crear una Reparación
+
+```javascript
+// 1. Request llega a la ruta
+POST /api/reparaciones/crear-completa
+
+// 2. Route handler valida y llama al controller
+router.post('/crear-completa', reparacionController.crearReparacionCompleta);
+
+// 3. Controller procesa el request
+const resultado = await reparacionService.crearReparacionCompleta(data);
+
+// 4. Service ejecuta la lógica de negocio
+async crearReparacionCompleta(data) {
+  // Transacción de base de datos
+  // Validaciones de negocio
+  // Operaciones múltiples
+}
+
+// 5. Response al cliente
+res.json({
+  success: true,
+  data: resultado,
+  timestamp: new Date().toISOString()
+});
+```
+
+## 🔌 API Endpoints
+
+### Rutas de Salud y Pruebas
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/health` | Estado del servidor |
+| GET | `/api/test-db` | Prueba de conexión BD |
+| GET | `/api/database/stats` | Estadísticas de tablas |
+| GET | `/api/establecimientos` | Lista de establecimientos |
+
+### Rutas de Reparaciones
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/reparaciones` | Lista de reparaciones |
+| GET | `/api/reparaciones/:id` | Reparación específica |
+| GET | `/api/reparaciones/resumen` | Resumen usando vista |
+| GET | `/api/reparaciones/stats/dashboard` | Estadísticas |
+| POST | `/api/reparaciones/crear-completa` | Crear reparación completa |
+| PATCH | `/api/reparaciones/:id/estado` | Actualizar estado |
+| DELETE | `/api/reparaciones/:id` | Eliminar reparación |
+
+### Rutas de Clientes
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/clientes` | Lista de clientes |
+| POST | `/api/clientes/test` | Crear cliente de prueba |
+
+### Rutas de Ventas (En desarrollo)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/ventas` | Lista de ventas |
+
+### Rutas de Compras (En desarrollo)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/compras` | Lista de compras |
+
+## 🗄️ Base de Datos
+
+### Esquema Principal
+
+```sql
+-- Tablas principales
+establecimientos
+clientes
+reparaciones
+reparacion_dispositivos
+dispositivo_averias
+averia_servicios
+reparacion_pagos
+reparacion_historial
+cliente_comunicaciones
+```
+
+### Relaciones
+
+```
+establecimientos (1) -----> (N) clientes
+clientes (1) -----> (N) reparaciones
+reparaciones (1) -----> (N) reparacion_dispositivos
+reparacion_dispositivos (1) -----> (N) dispositivo_averias
+dispositivo_averias (1) -----> (N) averia_servicios
+reparaciones (1) -----> (N) reparacion_pagos
+reparaciones (1) -----> (N) reparacion_historial
+```
+
+### Estados de Reparación
+
+```javascript
+const ESTADOS_REPARACION = {
+  INICIADA: 'iniciada',
+  EN_DIAGNOSTICO: 'en_diagnostico',
+  ESPERANDO_APROBACION: 'esperando_aprobacion',
+  PARCIALMENTE_APROBADA: 'parcialmente_aprobada',
+  EN_EJECUCION: 'en_ejecucion',
+  PARCIALMENTE_LISTA: 'parcialmente_lista',
+  LISTA: 'lista',
+  ENTREGADA: 'entregada',
+  SUSPENDIDA: 'suspendida',
+  CANCELADA: 'cancelada'
+};
+```
+
+## 📚 Ejemplos de Uso
+
+### Crear una Reparación Completa
+
+```javascript
+// POST /api/reparaciones/crear-completa
+const reparacionData = {
+  clienteData: {
+    nombre: "Juan",
+    apellidos: "Pérez",
+    dni: "12345678A",
+    telefono: "666123456",
+    email: "juan@email.com"
+  },
+  dispositivoData: {
+    marca: "iPhone",
+    modelo: "14 Pro",
+    imei: "123456789012345",
+    color: "Azul",
+    capacidad: "128GB"
+  },
+  diagnosticoData: {
+    problemas_reportados: ["Pantalla rota", "Batería agotada"],
+    prioridad: "normal",
+    sintomas_adicionales: "El dispositivo no enciende"
+  },
+  presupuestoData: {
+    items: [
+      {
+        concepto: "Cambio de pantalla",
+        tipo: "repuesto",
+        cantidad: 1,
+        precio: 200
+      },
+      {
+        concepto: "Cambio de batería",
+        tipo: "repuesto",
+        cantidad: 1,
+        precio: 80
+      }
+    ],
+    descuento: 10,
+    tipo_descuento: "porcentaje"
+  }
+};
+
+const response = await fetch('/api/reparaciones/crear-completa', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(reparacionData)
+});
+```
+
+### Obtener Lista de Reparaciones
+
+```javascript
+// GET /api/reparaciones?estado=en_diagnostico&busqueda=iPhone
+const response = await fetch('/api/reparaciones?estado=en_diagnostico&busqueda=iPhone');
+const data = await response.json();
+
+console.log(data);
+// {
+//   success: true,
+//   data: [
+//     {
+//       id: 1,
+//       numero_orden: "R-2025-0001",
+//       cliente_nombre: "Juan",
+//       cliente_apellidos: "Pérez",
+//       estado_general: "en_diagnostico",
+//       dispositivos_lista: "iPhone 14 Pro",
+//       total_final: 252.00,
+//       total_dispositivos: 1,
+//       total_averias: 2,
+//       averias_completadas: 0
+//     }
+//   ],
+//   count: 1,
+//   timestamp: "2025-01-14T..."
+// }
+```
+
+### Manejo de Errores
+
+```javascript
+// Ejemplo de respuesta de error
+{
+  success: false,
+  message: "Error en la base de datos",
+  error: "ER_DUP_ENTRY: Duplicate entry...",
+  timestamp: "2025-01-14T10:30:00.000Z"
+}
+```
+
+## 🔧 Desarrollo
+
+### Agregar un Nuevo Módulo
+
+1. **Crear las rutas**
+```javascript
+// routes/productos.js
+const express = require('express');
+const router = express.Router();
+const productoController = require('../controllers/productoController');
+
+router.get('/', productoController.obtenerProductos);
+router.post('/', productoController.crearProducto);
+
+module.exports = router;
+```
+
+2. **Crear el controlador**
+```javascript
+// controllers/productoController.js
+const productoService = require('../services/productoService');
+
+const productoController = {
+  obtenerProductos: async (req, res, next) => {
+    try {
+      const productos = await productoService.obtenerTodos();
+      res.json({ success: true, data: productos });
+    } catch (error) {
+      next(error);
+    }
+  }
+};
+
+module.exports = productoController;
+```
+
+3. **Crear el servicio**
+```javascript
+// services/productoService.js
+const { executeQuery } = require('../config/database');
+
+const productoService = {
+  obtenerTodos: async () => {
+    return await executeQuery('SELECT * FROM productos');
+  }
+};
+
+module.exports = productoService;
+```
+
+4. **Registrar en server.js**
+```javascript
+const productoRoutes = require('./routes/productos');
+app.use('/api/productos', productoRoutes);
+```
+
+### Buenas Prácticas
+
+- **Usar transacciones** para operaciones complejas
+- **Validar datos** en múltiples capas
+- **Manejar errores** de forma consistente
+- **Separar responsabilidades** claramente
+- **Documentar** cambios importantes
+- **Usar async/await** en lugar de callbacks
+- **Implementar logging** detallado
+
+### Testing
+
+```javascript
+// tests/reparaciones.test.js
+const request = require('supertest');
+const app = require('../server');
+
+describe('Reparaciones API', () => {
+  test('GET /api/reparaciones', async () => {
+    const response = await request(app)
+      .get('/api/reparaciones')
+      .expect(200);
+    
+    expect(response.body.success).toBe(true);
+    expect(Array.isArray(response.body.data)).toBe(true);
+  });
+});
+```
+
+### Debugging
+
+```javascript
+// Habilitar logging detallado
+DEBUG=erp:* npm run dev
+
+// Logs en servicios
+console.log('📋 Procesando reparación:', data);
+console.log('✅ Reparación creada:', resultado);
+console.error('❌ Error:', error);
+```
+
+## 📝 Logging
+
+### Niveles de Log
+
+- **📋 INFO**: Información general (azul)
+- **✅ SUCCESS**: Operaciones exitosas (verde)
+- **⚠️ WARNING**: Advertencias (amarillo)
+- **❌ ERROR**: Errores (rojo)
+- **🔍 DEBUG**: Información de debug (gris)
+
+### Ejemplos
+
+```javascript
+console.log('📋 Iniciando servidor...');
+console.log('✅ Conexión a BD establecida');
+console.warn('⚠️ Parámetro faltante, usando valor por defecto');
+console.error('❌ Error en la transacción:', error);
+```
+
+## 🚀 Deployment
+
+### Producción
+
+```bash
+# Instalar dependencias de producción
+npm ci --only=production
+
+# Construir aplicación
+npm run build
+
+# Iniciar con PM2
+pm2 start ecosystem.config.js
+
+# Configurar variables de entorno
+export NODE_ENV=production
+export DB_HOST=tu_servidor_mysql
+export DB_PASSWORD=tu_password_seguro
+```
+
+### Docker
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["npm", "start"]
+```
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+### Convenciones de Código
+
+- **Nomenclatura**: camelCase para variables y funciones
+- **Archivos**: camelCase para archivos JavaScript
+- **Constantes**: UPPER_SNAKE_CASE
+- **Comentarios**: Explicar el "por qué", no el "qué"
+- **Commits**: Usar convenciones de [Conventional Commits](https://www.conventionalcommits.org/)
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 📞 Contacto
+
+- **Proyecto**: ERP Móviles
+- **Autor**: Tu Nombre
+- **Email**: tu@email.com
+- **GitHub**: https://github.com/tu-usuario/erp-moviles
+
+---
+
+**¡Gracias por usar ERP Móviles!** 🎉

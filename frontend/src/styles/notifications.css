@@ -1,0 +1,93 @@
+/* styles/notifications.css */
+
+/* Animaciones modernas y suaves */
+@keyframes modern-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% { 
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes modern-fade {
+  0% { 
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  90% { 
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  100% { 
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* Efecto glassmorphism opcional para las notificaciones */
+.notification-glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Sombras modernas */
+.notification-shadow {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Animación de entrada suave */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animación de salida suave */
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%) scale(0.95);
+    opacity: 0;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .notification-item {
+    animation: none;
+    transition: none;
+  }
+  
+  @keyframes modern-pulse {
+    0%, 100% { 
+      opacity: 0.4;
+    }
+    50% { 
+      opacity: 0.6;
+    }
+  }
+  
+  @keyframes modern-fade {
+    0% { 
+      opacity: 0.4;
+    }
+    100% { 
+      opacity: 0;
+    }
+  }
+}
